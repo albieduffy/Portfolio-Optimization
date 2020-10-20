@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS portfolio;
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(255) UNIQUE,
+  password VARCHAR(255)
+);
