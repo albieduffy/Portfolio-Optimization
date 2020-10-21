@@ -14,6 +14,9 @@ flask-sqlalchemy = "*"
 pytest = "*"
 werkzeug = "*"
 psycopg2-binary = "*"
+numpy = "*"
+pandas = "*"
+pandas-datareader = "*"
 
 [requires]
 python_version = "3.8"

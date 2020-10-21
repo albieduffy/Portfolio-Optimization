@@ -41,18 +41,30 @@ def running():
 @app.route('/portfolio')
 @login_required
 def portfolio():
-    return render_template('portfolio.html')
+    result = format_resp(db.session.execute('SELECT ticker FROM positions WHERE user_id = :user_id', {'user_id': session['user_id']}))
+    db.session.commit()
 
-@app.route('/update', methods=['GET', 'POST'])
+    symbols = [item['ticker'] for item in result]
+    optimal_allocation = optimize(symbols)
+    
+
+    return render_template('portfolio.html', optimal_allocation=optimal_allocation)
+
+@app.route('/update', methods=['POST'])
 @login_required
 def update():
 
     # POST
     if request.method == 'POST':
-        return redirect('/portfolio')
-    # GET
-    else:
-        return render_template('update.html')
+
+        result = format_resp(db.session.execute('INSERT INTO positions (ticker, user_id) VALUES(:ticker, :user_id) RETURNING ticker', {'ticker': request.form.get('ticker').upper(), 'user_id': session['user_id']}))
+        db.session.commit()
+
+        if not result:
+            return jsonify('Something went wrong!')
+
+        else:
+            return redirect('/portfolio')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -70,11 +82,12 @@ def register():
             db.session.commit()
 
             if not result:
-                return return jsonify('Username already exists!', 400)
+                return jsonify('Username already exists!', 400)
 
-            session["user_id"] = result
+            else:
+                session["user_id"] = result
 
-            return redirect("/portfolio")
+                return redirect("/portfolio")
 
     # GET
     else:
@@ -93,7 +106,7 @@ def login():
                           {'username':request.form.get("username")}))
 
         if len(rows) != 1 or not check_password_hash(rows[0]["password"], request.form.get("password")):
-            return apology("invalid username and/or password", 403)
+            return jsonify("invalid username and/or password", 403)
 
         session["user_id"] = rows[0]["id"]
 
