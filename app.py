@@ -8,6 +8,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import login_required, format_resp, apology
+from optimization import optimize
 
 # Configure application
 app = Flask(__name__)
@@ -63,13 +64,13 @@ def register():
     if request.method == 'POST':
         if request.method == "POST":
             if request.form.get("password") != request.form.get("confirmation"):
-                return apology("passwords must match", 400)
+                return jsonify('Passwords do not match', 400)
 
             result = format_resp(db.session.execute("INSERT INTO users (username, password) VALUES(:username, :password) RETURNING id", {'username':request.form.get("username"), 'password':generate_password_hash(request.form.get("password"))}))
             db.session.commit()
 
             if not result:
-                return apology("username already exists", 400)
+                return return jsonify('Username already exists!', 400)
 
             session["user_id"] = result
 
@@ -87,11 +88,6 @@ def login():
 
     # POST route from form submission
     if request.method == 'POST':
-        if not request.form.get("username"):
-            return apology("must provide username", 403)
-
-        elif not request.form.get("password"):
-            return apology("must provide password", 403)
 
         rows = format_resp(db.session.execute("SELECT * FROM users WHERE username = :username",
                           {'username':request.form.get("username")}))
