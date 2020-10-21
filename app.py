@@ -62,16 +62,7 @@ def register():
     # POST
     if request.method == 'POST':
         if request.method == "POST":
-            if not request.form.get("username"):
-                return apology("must provide username", 400)
-
-            elif not request.form.get("password"):
-                return apology("must provide password", 400)
-
-            elif not request.form.get("confirmation", 400):
-                return apology("must provide password confirmation")
-
-            elif request.form.get("password") != request.form.get("confirmation"):
+            if request.form.get("password") != request.form.get("confirmation"):
                 return apology("passwords must match", 400)
 
             result = format_resp(db.session.execute("INSERT INTO users (username, password) VALUES(:username, :password) RETURNING id", {'username':request.form.get("username"), 'password':generate_password_hash(request.form.get("password"))}))
