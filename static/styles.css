@@ -33,7 +33,7 @@ main .form-control
 
 main
 {
-  height: calc(100vh - 66px);
+    height: calc(100vh - 66px);
     /* scroll horizontally as needed */
     overflow-x: auto;
 
@@ -50,4 +50,19 @@ main img
 body
 {
   height: 100vh;
+}
+
+li
+{
+  text-align: left;
+}
+
+#update-button
+{
+  width: 150px;
+}
+
+#remove-button
+{
+  width: 150px;
 }

@@ -5,30 +5,23 @@
 {% endblock %}
 
 {% block main %}
-<h1>{{optimal_allocation}}</h1>
-<!-- <div class="row h-75 align-items-center">
+<div class="row h-75 align-items-center">
   <div class="col-3">
-    <div class="list-group" id="list-tab" role="tablist">
-      <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Portfolio</a>
-      <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
-      <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
-      <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
-    </div>
+    some info here
+
   </div>
   <div class="col-9">
-    <div class="tab-content" id="nav-tabContent">
-      <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">This is the portfolio part</div>
-      <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...</div>
-      <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
-      <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
-    </div>
+    <canvas id="myChart"></canvas>
   </div>
-</div> -->
+</div>
 
 <div class="row h-25 align-items-center">
   <div class="col">
-    <button type="button" id="update-button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Update Portfolio</button>
+    <button type="button" id="update-button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Add Position</button>
+    <button type="button" id="remove-button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter1">Remove Position</button>
   </div>
+
+
   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -49,5 +42,84 @@
     </div>
   </div>
   </div>
+
+
+
+
+  <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle1">Portfolio</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/delete" method="delete">
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" name="ticker" placeholder="Ticker" type="text" maxlength="5">
+            </div>
+            <button class="btn btn-danger" type="submit">Remove From Portfolio</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
 </div>
+
+<script>
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'pie',
+
+    // The data for our dataset
+    data: {
+        labels: {{symbols | safe}},
+        datasets: [{
+          data: {{pie_data}},
+          backgroundColor: [
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56',
+            '#469B25',
+            '#27447D',
+            '#8C71D8',
+            '#BD5146',
+            '#557C24',
+            '#D6D7D3',
+            '#EE0997',
+            '#532742',
+            '#277D6F',
+            '#C4677C',
+            '#34C00D'
+          ],
+          hoverBackgroundColor: [
+        '#FF6384',
+        '#36A2EB',
+        '#FFCE56',
+        '#469B25',
+        '#27447D',
+        '#8C71D8',
+        '#BD5146',
+        '#557C24',
+        '#D6D7D3',
+        '#EE0997',
+        '#532742',
+        '#277D6F',
+        '#C4677C',
+        '#34C00D'
+    ]
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+      legend: {
+        position: 'top'
+      }
+    }
+  });
+</script>
 {% endblock %}

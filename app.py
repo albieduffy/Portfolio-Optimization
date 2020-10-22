@@ -41,14 +41,15 @@ def running():
 @app.route('/portfolio')
 @login_required
 def portfolio():
-    result = format_resp(db.session.execute('SELECT ticker FROM positions WHERE user_id = :user_id', {'user_id': session['user_id']}))
+    result = format_resp(db.session.execute('SELECT ticker FROM positions WHERE user_id = :user_id ORDER BY ticker ASC', {'user_id': session['user_id']}))
     db.session.commit()
 
     symbols = [item['ticker'] for item in result]
     optimal_allocation = optimize(symbols)
-    
+    pie_data = [*optimal_allocation.values()]
 
-    return render_template('portfolio.html', optimal_allocation=optimal_allocation)
+
+    return render_template('portfolio.html', optimal_allocation=optimal_allocation, symbols=symbols, pie_data=pie_data)
 
 @app.route('/update', methods=['POST'])
 @login_required
