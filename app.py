@@ -7,7 +7,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import login_required, format_resp, apology
+from helpers import login_required, format_resp
 from optimization import optimize
 
 # Configure application
@@ -125,16 +125,6 @@ def logout():
     # Redirect to landing page
     return redirect('/')
 
-
-# Error handler
-def errorhandler(e):
-    if not isinstance(e, HTTPException):
-        e = InternalServerError()
-    return apology(e.name, e.code)
-
-# Listen for errors
-for code in default_exceptions:
-    app.errorhandler(code)(errorhandler)
 
 if __name__ == "__main__":
     app.run()
