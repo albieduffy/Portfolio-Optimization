@@ -31,7 +31,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Set local DB
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgres:///meanvaropt"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://upcdplssufzmnh:a4212931c2892c03fbdf8ef6d5e7ad24f299ee43569d61c892daad37011cfbfe@ec2-54-247-103-43.eu-west-1.compute.amazonaws.com:5432/d9ft8c6v3j3am2"
+
 db = SQLAlchemy(app)
 
 @app.route('/')
