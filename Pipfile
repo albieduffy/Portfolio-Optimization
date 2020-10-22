@@ -17,6 +17,7 @@ psycopg2-binary = "*"
 numpy = "*"
 pandas = "*"
 pandas-datareader = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"
