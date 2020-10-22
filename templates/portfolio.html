@@ -5,8 +5,10 @@
 {% endblock %}
 
 {% block main %}
+{% if symbols %}
 <div class="row h-75 align-items-center">
   <div class="col-3">
+    <h3>Optimal Allocation</h3>
     <ul class="list-group">
       {% for symbol in symbols %}
         <li class="list-group-item">{{symbol}}: {{optimal_allocation[symbol]}}%</li>
@@ -18,7 +20,11 @@
     <canvas id="myChart"></canvas>
   </div>
 </div>
-
+{% else %}
+<div class="row h-75 align-items-center justify-content-center">
+  <h1>Add Assets To Your Portfolio</h1>
+</div>
+{% endif %}
 <div class="row h-25 align-items-center">
   <div class="col">
     <button type="button" id="update-button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Add Position</button>
@@ -60,7 +66,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="/delete" method="delete">
+        <form action="/delete" method="post">
             <div class="form-group">
                 <input autocomplete="off" autofocus class="form-control" name="ticker" placeholder="Ticker" type="text" maxlength="5">
             </div>
@@ -76,7 +82,7 @@
   var ctx = document.getElementById('myChart').getContext('2d');
   var chart = new Chart(ctx, {
     // The type of chart we want to create
-    type: 'pie',
+    type: 'polarArea',
 
     // The data for our dataset
     data: {
@@ -121,7 +127,7 @@
     // Configuration options go here
     options: {
       legend: {
-        position: 'top'
+        position: 'right'
       }
     }
   });

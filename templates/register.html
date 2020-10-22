@@ -5,7 +5,12 @@
 {% endblock %}
 
 {% block main %}
-<div class="row h-100 align-items-center">
+{% if alert == 'Something went wrong!' %}
+<div class="alert alert-danger" role="alert">
+  {{alert}}
+</div>
+{% endif %}
+<div class="row h-100 align-items-center justify-content-center">
   <form action="/register" method="post">
       <div class="form-group">
           <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text" required>

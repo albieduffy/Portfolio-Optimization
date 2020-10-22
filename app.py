@@ -41,15 +41,19 @@ def running():
 @app.route('/portfolio')
 @login_required
 def portfolio():
-    result = format_resp(db.session.execute('SELECT ticker FROM positions WHERE user_id = :user_id ORDER BY ticker ASC', {'user_id': session['user_id']}))
-    db.session.commit()
+    try:
+        result = format_resp(db.session.execute('SELECT ticker FROM positions WHERE user_id = :user_id ORDER BY ticker ASC', {'user_id': session['user_id']}))
+        db.session.commit()
 
-    symbols = [item['ticker'] for item in result]
-    optimal_allocation = optimize(symbols)
-    pie_data = [*optimal_allocation.values()]
+        symbols = [item['ticker'] for item in result]
+        optimal_allocation = optimize(symbols)
+        pie_data = [*optimal_allocation.values()]
+        return render_template('portfolio.html', optimal_allocation=optimal_allocation, symbols=symbols, pie_data=pie_data)
+    except:
+
+        return render_template('portfolio.html')
 
 
-    return render_template('portfolio.html', optimal_allocation=optimal_allocation, symbols=symbols, pie_data=pie_data)
 
 @app.route('/update', methods=['POST'])
 @login_required
@@ -62,14 +66,29 @@ def update():
         db.session.commit()
 
         if not result:
-            return jsonify('Something went wrong!')
+            return redirect('/portfolio')
+
+        else:
+            return redirect('/portfolio')
+
+@app.route('/delete', methods=['POST'])
+@login_required
+def delete():
+
+    # POST
+    if request.method == 'POST':
+
+        result = format_resp(db.session.execute('DELETE FROM positions WHERE ticker = :ticker AND user_id = :user_id RETURNING :user_id', {'ticker': request.form.get('ticker').upper(), 'user_id': session['user_id']}))
+        db.session.commit()
+
+        if not result:
+            return redirect('/portfolio')
 
         else:
             return redirect('/portfolio')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-
     # Clear user_id
     session.clear()
 
@@ -83,7 +102,7 @@ def register():
             db.session.commit()
 
             if not result:
-                return jsonify('Username already exists!', 400)
+                return redirect('/register')
 
             else:
                 session["user_id"] = result
@@ -96,7 +115,6 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
     # Clear user_id
     session.clear()
 
@@ -107,7 +125,7 @@ def login():
                           {'username':request.form.get("username")}))
 
         if len(rows) != 1 or not check_password_hash(rows[0]["password"], request.form.get("password")):
-            return jsonify("invalid username and/or password", 403)
+            return redirect('/login')
 
         session["user_id"] = rows[0]["id"]
 
