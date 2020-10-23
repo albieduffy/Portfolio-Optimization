@@ -49,6 +49,7 @@ def portfolio():
         symbols = [item['ticker'] for item in result]
         optimal_allocation = optimize(symbols)
         pie_data = [*optimal_allocation.values()]
+        
         return render_template('portfolio.html', optimal_allocation=optimal_allocation, symbols=symbols, pie_data=pie_data)
     except:
 
